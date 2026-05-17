@@ -4,7 +4,7 @@
 
 ## 📋 Objective
 
-Validate key business functionalities of the Rolnopol system based on provided documentation.
+Validate critical smoke scenarios and key business functionalities of the Rolnopol system based on available documentation and application pages.
 
 ---
 
@@ -12,17 +12,27 @@ Validate key business functionalities of the Rolnopol system based on provided d
 
 ### ✅ In Scope
 
-- Authentication (register, login, logout)
-- Farm management (fields, animals, staff, assignments)
-- Marketplace operations (create, buy, cancel offers)
-- Financial operations (balance, transactions, transfers)
-- Basic permissions (user access)
-- Basic documentation page loading and content validation
+- Basic application availability
+- Authentication pages availability
+- Register page loading and form visibility
+- Login page loading and form visibility
+- API documentation page loading
+- System documentation page loading and content validation
+- Future coverage for:
+  - Authentication flows
+  - Farm management
+  - Marketplace
+  - Financial operations
+  - Permissions
+  - API healthcheck
 
 ### ❌ Out of Scope
 
-- UI styling and layout
+- UI styling and layout validation
+- Pixel-perfect visual testing
 - Very deep internal documentation content validation
+- Performance testing
+- Security penetration testing
 
 ---
 
@@ -47,9 +57,61 @@ Validate key business functionalities of the Rolnopol system based on provided d
 
 ## 🧪 Test Scenarios
 
-### 1. 🔐 Authentication
+---
 
-- [ ] Register new user (valid data)  
+### 1. 🌐 Basic Application Smoke Tests
+
+- [x] Verify home page loads and page title contains `Rolnopol`  
+       `@smoke @regression @ui`
+
+---
+
+### 2. 🔐 Authentication Pages
+
+- [x] Verify `/register.html` loads successfully  
+       `@smoke @auth @ui @critical`
+
+- [x] Verify register page URL is correct  
+       `@smoke @auth @ui @critical`
+
+- [x] Verify register page title contains `Rolnopol`  
+       `@smoke @auth @ui @critical`
+
+- [x] Verify register form is visible  
+       `@smoke @auth @ui @critical`
+
+- [x] Verify register email input is visible  
+       `@smoke @auth @ui @critical`
+
+- [x] Verify register password input is visible  
+       `@smoke @auth @ui @critical`
+
+- [x] Verify `/login.html` loads successfully  
+       `@smoke @auth @ui @critical`
+
+- [x] Verify login page URL is correct  
+       `@smoke @auth @ui @critical`
+
+- [x] Verify login page title contains `Rolnopol`  
+       `@smoke @auth @ui @critical`
+
+- [x] Verify login form is visible  
+       `@smoke @auth @ui @critical`
+
+- [x] Verify login page shows text `User Login & Account Access`  
+       `@smoke @auth @ui @critical`
+
+- [x] Verify login email input is visible  
+       `@smoke @auth @ui @critical`
+
+- [x] Verify login password input is visible  
+       `@smoke @auth @ui @critical`
+
+---
+
+### 3. 🔐 Authentication Flows
+
+- [ ] Register new user with valid data  
        `@smoke @regression @auth @ui @critical`
 
 - [ ] Login with valid credentials  
@@ -63,7 +125,32 @@ Validate key business functionalities of the Rolnopol system based on provided d
 
 ---
 
-### 2. 🚜 Farm Management
+### 4. 📚 Documentation / API Docs
+
+- [x] Verify `/swagger.html` loads successfully  
+       `@smoke @api @ui`
+
+- [x] Verify Swagger page URL is correct  
+       `@smoke @api @ui`
+
+- [x] Verify Swagger iframe is visible  
+       `@smoke @api @ui`
+
+- [x] Verify Swagger iframe contains expected API documentation text  
+       `@smoke @api @ui`
+
+- [x] Verify `/docs.html` loads successfully  
+       `@smoke @api @ui`
+
+- [x] Verify docs page URL is correct  
+       `@smoke @api @ui`
+
+- [x] Verify docs page shows `Rolnopol System Guide & API Reference` text  
+       `@smoke @api @ui`
+
+---
+
+### 5. 🚜 Farm Management
 
 - [ ] Create, edit, delete field  
        `@regression @farm @ui`
@@ -74,33 +161,33 @@ Validate key business functionalities of the Rolnopol system based on provided d
 - [ ] Create, edit, delete staff  
        `@regression @farm @ui`
 
-- [ ] Assign staff/animal to field  
+- [ ] Assign staff or animal to field  
        `@smoke @regression @farm @ui @critical`
 
 ---
 
-### 3. 🛒 Marketplace
+### 6. 🛒 Marketplace
 
-- [ ] Create offer for unassigned asset → status `active`  
+- [ ] Create offer for unassigned asset and verify status `active`  
        `@smoke @regression @marketplace @ui`
 
-- [ ] Create offer for assigned asset → status `unavailable`  
+- [ ] Create offer for assigned asset and verify status `unavailable`  
        `@regression @marketplace @negative`
 
-- [ ] Buy offer with sufficient funds → `success`  
+- [ ] Buy offer with sufficient funds and verify success  
        `@smoke @regression @marketplace @finance @critical`
 
-- [ ] Buy offer with insufficient funds → `blocked`  
+- [ ] Buy offer with insufficient funds and verify transaction is blocked  
        `@regression @marketplace @finance @negative`
 
-- [ ] Cancel offer → status `cancelled`  
+- [ ] Cancel offer and verify status `cancelled`  
        `@regression @marketplace @ui`
 
 ---
 
-### 4. 💰 Financial Operations
+### 7. 💰 Financial Operations
 
-- [ ] Verify balance updates after purchase/sale  
+- [ ] Verify balance updates after purchase or sale  
        `@smoke @regression @finance @critical`
 
 - [ ] Verify transaction history  
@@ -114,7 +201,7 @@ Validate key business functionalities of the Rolnopol system based on provided d
 
 ---
 
-### 5. 🔒 Permissions
+### 8. 🔒 Permissions
 
 - [ ] User cannot access admin endpoints  
        `@smoke @regression @permissions @api @negative @critical`
@@ -124,17 +211,7 @@ Validate key business functionalities of the Rolnopol system based on provided d
 
 ---
 
-### 6. � Documentation / API Docs
-
-- [ ] Verify `/swagger.html` loads and shows API documentation text  
-       `@smoke @api @ui`
-
-- [ ] Verify `/docs.html` loads and shows Rolnopol System Guide header  
-       `@smoke @api @ui`
-
----
-
-### 7. �💚 System Health
+### 9. 💚 System Health
 
 - [ ] Verify `/api/v1/healthcheck` returns `OK`  
        `@smoke @healthcheck @api`
@@ -146,21 +223,20 @@ Validate key business functionalities of the Rolnopol system based on provided d
 
 ## 🌐 Environment
 
-| Component   | URL                     |
-| ----------- | ----------------------- |
-| **Local**   | `http://localhost:3000` |
-| **Swagger** | `/swagger.html`         |
+| Component | URL                     |
+| --------- | ----------------------- |
+| Local     | `http://localhost:3000` |
+| Swagger   | `/swagger.html`         |
+| Docs      | `/docs.html`            |
+| Register  | `/register.html`        |
+| Login     | `/login.html`           |
 
 ---
 
 ## 💡 Example Playwright Usage
 
-### Example test
+### Run all tests
 
-```ts
-test("Login with valid credentials @smoke @auth @critical", async ({
-  page,
-}) => {
-  // test implementation
-});
+```bash
+npx playwright test
 ```
