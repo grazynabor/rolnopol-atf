@@ -1,4 +1,17 @@
-import { expect, test } from "@playwright/test";
+import { expect, type Response, test } from "@playwright/test";
+import { createRegistrationUser } from "../src/helpers";
+import { RegistrationPage } from "../src/pages";
+
+
+const REGISTER_SUCCESS_NOTIFICATION = {
+  title: "Success",
+  message: "Registration successful!",
+};
+
+function expectPageLoaded(response: Response | null) {
+  expect(response, "Page response should exist").not.toBeNull();
+  expect(response!.ok()).toBeTruthy();
+}
 
 const PAGE_TITLE = /Rolnopol/;
 
@@ -37,27 +50,57 @@ test("verifies that the page title contains 'Rolnopol' @smoke @regression @ui", 
   expectPageLoaded(response);
 
   await expect(page).toHaveTitle(PAGE_TITLE);
+  await expect(page.locator("body")).toContainText("Rolnopol");
 });
 
 test.describe("Auth smoke tests", () => {
-  test("register page is visible and loaded @smoke @auth @ui @critical", async ({
+  test("register page is visible and loaded @smoke @auth @registration @ui @critical", async ({
     page,
   }) => {
-    const response = await page.goto("/register.html");
+    const registrationPage = new RegistrationPage(page);
+
+    const response = await registrationPage.goto();
 
     expectPageLoaded(response);
 
     await expect(page).toHaveURL(REGISTER_PAGE.url);
     await expect(page).toHaveTitle(PAGE_TITLE);
-
-    await expect(page.getByTestId("register-form")).toBeVisible();
-
-    await expect(page.getByTestId("register-subtitle")).toBeVisible();
-
-    await expect(page.getByTestId("email-input")).toBeVisible();
-
-    await expect(page.getByTestId("password-input")).toBeVisible();
+    await expect(registrationPage.form).toBeVisible();
+    await expect(registrationPage.subtitle).toBeVisible();
+    await expect(registrationPage.subtitle).toContainText(
+      REGISTER_PAGE.heading,
+    );
+    await expect(registrationPage.emailInput).toBeVisible();
+    await expect(registrationPage.displayNameInput).toBeVisible();
+    await expect(registrationPage.passwordInput).toBeVisible();
   });
+
+  test("registers a new user with required data @smoke @regression @auth @registration @ui @critical", async ({
+    page,
+  }) => {
+    const registrationPage = new RegistrationPage(page);
+    const user = createRegistrationUser();
+
+    const response = await registrationPage.goto();
+
+    expectPageLoaded(response);
+
+    const registerResponse = await registrationPage.register(user);
+    const successNotification = registrationPage.successNotification(
+      REGISTER_SUCCESS_NOTIFICATION.message,
+    );
+
+    expect(registerResponse.status()).toBe(201);
+    await expect(successNotification).toBeVisible();
+    await expect(successNotification).toContainText(
+      REGISTER_SUCCESS_NOTIFICATION.title,
+    );
+    await expect(successNotification).toContainText(
+      REGISTER_SUCCESS_NOTIFICATION.message,
+    );
+    await expect(page).toHaveURL(LOGIN_PAGE.url);
+  });
+});
 
   test("login page is visible and loaded @smoke @auth @ui @critical", async ({
     page,
@@ -77,7 +120,6 @@ test.describe("Auth smoke tests", () => {
 
     await expect(page.getByLabel(/^password$/i)).toBeVisible();
   });
-});
 
 test("swagger page loads and shows expected text @smoke @api @ui", async ({
   page,

@@ -43,6 +43,7 @@ Validate critical smoke scenarios and key business functionalities of the Rolnop
 | `@smoke`       | Critical happy-path validation |
 | `@regression`  | Full regression coverage       |
 | `@auth`        | Authentication-related tests   |
+| `@registration` | Registration-related tests   |
 | `@farm`        | Farm management module         |
 | `@marketplace` | Marketplace module             |
 | `@finance`     | Financial operations           |
@@ -61,58 +62,77 @@ Validate critical smoke scenarios and key business functionalities of the Rolnop
 
 ### 1. 🌐 Basic Application Smoke Tests
 
-- [x] Verify home page loads and page title contains `Rolnopol`  
+- [x] Verify home page loads and page title contains `Rolnopol`
        `@smoke @regression @ui`
 
 ---
 
 ### 2. 🔐 Authentication Pages
 
-- [x] Verify `/register.html` loads successfully  
+- [x] Verify `/register.html` loads successfully
+       `@smoke @auth @registration @ui @critical`
+
+- [x] Verify register page URL is correct
+       `@smoke @auth @registration @ui @critical`
+
+- [x] Verify register page title contains `Rolnopol`
+       `@smoke @auth @registration @ui @critical`
+
+- [x] Verify register form is visible
+       `@smoke @auth @registration @ui @critical`
+
+- [x] Verify register email input is visible
+       `@smoke @auth @registration @ui @critical`
+
+- [x] Verify optional register display name input is visible
+       `@smoke @auth @registration @ui @critical`
+
+- [x] Verify register password input is visible
+       `@smoke @auth @registration @ui @critical`
+
+- [x] Verify `/login.html` loads successfully
        `@smoke @auth @ui @critical`
 
-- [x] Verify register page URL is correct  
+- [x] Verify login page URL is correct
        `@smoke @auth @ui @critical`
 
-- [x] Verify register page title contains `Rolnopol`  
+- [x] Verify login page title contains `Rolnopol`
        `@smoke @auth @ui @critical`
 
-- [x] Verify register form is visible  
+- [x] Verify login form is visible
        `@smoke @auth @ui @critical`
 
-- [x] Verify register email input is visible  
+- [x] Verify login page shows text `User Login & Account Access`
        `@smoke @auth @ui @critical`
 
-- [x] Verify register password input is visible  
+- [x] Verify login email input is visible
        `@smoke @auth @ui @critical`
 
-- [x] Verify `/login.html` loads successfully  
-       `@smoke @auth @ui @critical`
-
-- [x] Verify login page URL is correct  
-       `@smoke @auth @ui @critical`
-
-- [x] Verify login page title contains `Rolnopol`  
-       `@smoke @auth @ui @critical`
-
-- [x] Verify login form is visible  
-       `@smoke @auth @ui @critical`
-
-- [x] Verify login page shows text `User Login & Account Access`  
-       `@smoke @auth @ui @critical`
-
-- [x] Verify login email input is visible  
-       `@smoke @auth @ui @critical`
-
-- [x] Verify login password input is visible  
+- [x] Verify login password input is visible
        `@smoke @auth @ui @critical`
 
 ---
 
 ### 3. 🔐 Authentication Flows
 
-- [ ] Register new user with valid data  
+- [ ] Register new user with required data: email and password
+       `@smoke @regression @auth @registration @ui @critical`
+
+- [ ] Login with valid credentials
        `@smoke @regression @auth @ui @critical`
+
+- [ ] Login with invalid credentials
+       `@regression @auth @ui @negative`
+
+- [ ] Logout and session invalidation
+       `@smoke @regression @auth @ui`
+
+---
+
+### 3. 🔐 Authentication Flows
+
+- [ ] Register new user with required data: email and password  
+       `@smoke @regression @auth @registration @ui @critical`
 
 - [ ] Login with valid credentials  
        `@smoke @regression @auth @ui @critical`
