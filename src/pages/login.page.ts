@@ -1,8 +1,9 @@
 import { type Locator, type Page } from "@playwright/test";
 import { BasePage } from "./base.page";
+import { PAGE_URLS } from "./page-urls";
 
 export class LoginPage extends BasePage {
-  static readonly URL = "/login.html";
+  static readonly URL = PAGE_URLS.login;
 
   readonly form: Locator;
   readonly subtitle: Locator;

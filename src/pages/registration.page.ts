@@ -1,5 +1,6 @@
 import { type Locator, type Page, type Response } from "@playwright/test";
 import { BasePage } from "./base.page";
+import { PAGE_URLS } from "./page-urls";
 
 export type RegistrationUser = {
   email: string;
@@ -8,7 +9,7 @@ export type RegistrationUser = {
 };
 
 export class RegistrationPage extends BasePage {
-  static readonly URL = "/register.html";
+  static readonly URL = PAGE_URLS.registration;
 
   readonly form: Locator;
   readonly subtitle: Locator;

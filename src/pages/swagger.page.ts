@@ -4,9 +4,10 @@ import {
   type Page,
 } from "@playwright/test";
 import { BasePage } from "./base.page";
+import { PAGE_URLS } from "./page-urls";
 
 export class SwaggerPage extends BasePage {
-  static readonly URL = "/swagger.html";
+  static readonly URL = PAGE_URLS.swagger;
 
   readonly frame: Locator;
 

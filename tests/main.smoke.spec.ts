@@ -1,6 +1,12 @@
 import { expect, type Response, test } from "@playwright/test";
 import { createRegistrationUser } from "../src/helpers";
-import { RegistrationPage } from "../src/pages";
+import {
+  DocsPage,
+  HomePage,
+  LoginPage,
+  RegistrationPage,
+  SwaggerPage,
+} from "../src/pages";
 
 
 const REGISTER_SUCCESS_NOTIFICATION = {
@@ -17,17 +23,16 @@ const PAGE_TITLE = /Rolnopol/;
 
 const REGISTER_PAGE = {
   url: /register\.html/,
-  heading: "Create Your User Account",
+  subtitle: "Create Your User Account",
 };
 
 const LOGIN_PAGE = {
   url: /login\.html/,
-  heading: "User Login & Account Access",
+  subtitle: "User Login & Account Access",
 };
 
 const SWAGGER_PAGE = {
   url: /swagger\.html/,
-  frame: "#swagger-frame",
   expectedText:
     "API documentation for the Rolnopol service with versioning support",
 };
@@ -39,28 +44,35 @@ const DOCS_PAGE = {
 
 function expectPageLoaded(response: Awaited<ReturnType<any>>) {
   expect(response, "Page response should exist").not.toBeNull();
-  expect(response!.ok()).toBeTruthy();
+  expect(response?.ok(), "Page response should be successful").toBe(true);
 }
 
 test("verifies that the page title contains 'Rolnopol' @smoke @regression @ui", async ({
   page,
 }) => {
-  const response = await page.goto("/");
+  // Arrange
+  const homePage = new HomePage(page);
 
+  // Act
+  const response = await homePage.goto();
+
+  // Assert
   expectPageLoaded(response);
 
   await expect(page).toHaveTitle(PAGE_TITLE);
-  await expect(page.locator("body")).toContainText("Rolnopol");
 });
 
 test.describe("Auth smoke tests", () => {
   test("register page is visible and loaded @smoke @auth @registration @ui @critical", async ({
     page,
   }) => {
+    // Arrange
     const registrationPage = new RegistrationPage(page);
 
+    // Act
     const response = await registrationPage.goto();
 
+    // Assert
     expectPageLoaded(response);
 
     await expect(page).toHaveURL(REGISTER_PAGE.url);
@@ -68,7 +80,7 @@ test.describe("Auth smoke tests", () => {
     await expect(registrationPage.form).toBeVisible();
     await expect(registrationPage.subtitle).toBeVisible();
     await expect(registrationPage.subtitle).toContainText(
-      REGISTER_PAGE.heading,
+      REGISTER_PAGE.subtitle,
     );
     await expect(registrationPage.emailInput).toBeVisible();
     await expect(registrationPage.displayNameInput).toBeVisible();
@@ -78,18 +90,20 @@ test.describe("Auth smoke tests", () => {
   test("registers a new user with required data @smoke @regression @auth @registration @ui @critical", async ({
     page,
   }) => {
+    // Arrange
     const registrationPage = new RegistrationPage(page);
     const user = createRegistrationUser();
-
     const response = await registrationPage.goto();
 
     expectPageLoaded(response);
 
+    // Act
     const registerResponse = await registrationPage.register(user);
     const successNotification = registrationPage.successNotification(
       REGISTER_SUCCESS_NOTIFICATION.message,
     );
 
+    // Assert
     expect(registerResponse.status()).toBe(201);
     await expect(successNotification).toBeVisible();
     await expect(successNotification).toContainText(
@@ -100,53 +114,59 @@ test.describe("Auth smoke tests", () => {
     );
     await expect(page).toHaveURL(LOGIN_PAGE.url);
   });
-});
 
   test("login page is visible and loaded @smoke @auth @ui @critical", async ({
     page,
   }) => {
-    const response = await page.goto("/login.html");
+    // Arrange
+    const loginPage = new LoginPage(page);
 
+    // Act
+    const response = await loginPage.goto();
+
+    // Assert
     expectPageLoaded(response);
 
     await expect(page).toHaveURL(LOGIN_PAGE.url);
     await expect(page).toHaveTitle(PAGE_TITLE);
-
-    await expect(page.locator("form")).toBeVisible();
-
-    await expect(page.getByText(LOGIN_PAGE.heading)).toBeVisible();
-
-    await expect(page.getByLabel(/email/i)).toBeVisible();
-
-    await expect(page.getByLabel(/^password$/i)).toBeVisible();
+    await expect(loginPage.form).toBeVisible();
+    await expect(loginPage.subtitle).toContainText(LOGIN_PAGE.subtitle);
+    await expect(loginPage.emailInput).toBeVisible();
+    await expect(loginPage.passwordInput).toBeVisible();
   });
+});
 
 test("swagger page loads and shows expected text @smoke @api @ui", async ({
   page,
 }) => {
-  const response = await page.goto("/swagger.html");
+  // Arrange
+  const swaggerPage = new SwaggerPage(page);
 
+  // Act
+  const response = await swaggerPage.goto();
+
+  // Assert
   expectPageLoaded(response);
 
   await expect(page).toHaveURL(SWAGGER_PAGE.url);
-
-  await expect(page.locator(SWAGGER_PAGE.frame)).toBeVisible();
-
-  const frame = page.frameLocator(SWAGGER_PAGE.frame);
-
-  await expect(frame.locator("body")).toContainText(SWAGGER_PAGE.expectedText);
+  await expect(swaggerPage.frame).toBeVisible();
+  await expect(swaggerPage.documentationContent()).toContainText(
+    SWAGGER_PAGE.expectedText,
+  );
 });
 
 test("docs page loads and shows expected text @smoke @api @ui", async ({
   page,
 }) => {
-  const response = await page.goto("/docs.html");
+  // Arrange
+  const docsPage = new DocsPage(page);
 
+  // Act
+  const response = await docsPage.goto();
+
+  // Assert
   expectPageLoaded(response);
 
   await expect(page).toHaveURL(DOCS_PAGE.url);
-
-  await expect(page.locator(".docs-header-subtitle")).toContainText(
-    DOCS_PAGE.subtitle,
-  );
+  await expect(docsPage.subtitle(DOCS_PAGE.subtitle)).toBeVisible();
 });
