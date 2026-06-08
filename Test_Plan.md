@@ -38,21 +38,21 @@ Validate critical smoke scenarios and key business functionalities of the Rolnop
 
 # 🏷️ Test Tags Convention
 
-| Tag            | Purpose                        |
-| -------------- | ------------------------------ |
-| `@smoke`       | Critical happy-path validation |
-| `@regression`  | Full regression coverage       |
-| `@auth`        | Authentication-related tests   |
-| `@registration` | Registration-related tests   |
-| `@farm`        | Farm management module         |
-| `@marketplace` | Marketplace module             |
-| `@finance`     | Financial operations           |
-| `@permissions` | Authorization/access control   |
-| `@api`         | API-level validation           |
-| `@ui`          | UI/E2E interaction             |
-| `@negative`    | Negative/error scenarios       |
-| `@critical`    | High business impact           |
-| `@healthcheck` | System health tests            |
+| Tag             | Purpose                        |
+| --------------- | ------------------------------ |
+| `@smoke`        | Critical happy-path validation |
+| `@regression`   | Full regression coverage       |
+| `@auth`         | Authentication-related tests   |
+| `@registration` | Registration-related tests     |
+| `@farm`         | Farm management module         |
+| `@marketplace`  | Marketplace module             |
+| `@finance`      | Financial operations           |
+| `@permissions`  | Authorization/access control   |
+| `@api`          | API-level validation           |
+| `@ui`           | UI/E2E interaction             |
+| `@negative`     | Negative/error scenarios       |
+| `@critical`     | High business impact           |
+| `@healthcheck`  | System health tests            |
 
 ---
 
@@ -63,75 +63,75 @@ Validate critical smoke scenarios and key business functionalities of the Rolnop
 ### 1. 🌐 Basic Application Smoke Tests
 
 - [x] Verify home page loads and page title contains `Rolnopol`
-       `@smoke @regression @ui`
+      `@smoke @regression @ui`
 
 ---
 
 ### 2. 🔐 Authentication Pages
 
 - [x] Verify `/register.html` loads successfully
-       `@smoke @auth @registration @ui @critical`
+      `@smoke @auth @registration @ui @critical`
 
 - [x] Verify register page URL is correct
-       `@smoke @auth @registration @ui @critical`
+      `@smoke @auth @registration @ui @critical`
 
 - [x] Verify register page title contains `Rolnopol`
-       `@smoke @auth @registration @ui @critical`
+      `@smoke @auth @registration @ui @critical`
 
 - [x] Verify register form is visible
-       `@smoke @auth @registration @ui @critical`
+      `@smoke @auth @registration @ui @critical`
 
 - [x] Verify register email input is visible
-       `@smoke @auth @registration @ui @critical`
+      `@smoke @auth @registration @ui @critical`
 
 - [x] Verify optional register display name input is visible
-       `@smoke @auth @registration @ui @critical`
+      `@smoke @auth @registration @ui @critical`
 
 - [x] Verify register password input is visible
-       `@smoke @auth @registration @ui @critical`
+      `@smoke @auth @registration @ui @critical`
 
 - [x] Verify `/login.html` loads successfully
-       `@smoke @auth @ui @critical`
+      `@smoke @auth @ui @critical`
 
 - [x] Verify login page URL is correct
-       `@smoke @auth @ui @critical`
+      `@smoke @auth @ui @critical`
 
 - [x] Verify login page title contains `Rolnopol`
-       `@smoke @auth @ui @critical`
+      `@smoke @auth @ui @critical`
 
 - [x] Verify login form is visible
-       `@smoke @auth @ui @critical`
+      `@smoke @auth @ui @critical`
 
 - [x] Verify login page shows text `User Login & Account Access`
-       `@smoke @auth @ui @critical`
+      `@smoke @auth @ui @critical`
 
 - [x] Verify login email input is visible
-       `@smoke @auth @ui @critical`
+      `@smoke @auth @ui @critical`
 
 - [x] Verify login password input is visible
-       `@smoke @auth @ui @critical`
+      `@smoke @auth @ui @critical`
 
 ---
 
 ### 3. 🔐 Authentication Flows
 
-- [ ] Register new user with required data: email and password
-       `@smoke @regression @auth @registration @ui @critical`
+- [x] Register new user with required data: email and password
+      `@smoke @regression @auth @registration @ui @critical`
 
 - [ ] Login with valid credentials
-       `@smoke @regression @auth @ui @critical`
+      `@smoke @regression @auth @ui @critical`
 
 - [ ] Login with invalid credentials
-       `@regression @auth @ui @negative`
+      `@regression @auth @ui @negative`
 
 - [ ] Logout and session invalidation
-       `@smoke @regression @auth @ui`
+      `@smoke @regression @auth @ui`
 
 ---
 
 ### 3. 🔐 Authentication Flows
 
-- [ ] Register new user with required data: email and password  
+- [x] Register new user with required data: email and password  
        `@smoke @regression @auth @registration @ui @critical`
 
 - [ ] Login with valid credentials  

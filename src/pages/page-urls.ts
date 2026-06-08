@@ -1,3 +1,6 @@
+/**
+ * Central route registry for page objects and URL assertions.
+ */
 export const PAGE_URLS = {
   docs: "/docs.html",
   home: "/",

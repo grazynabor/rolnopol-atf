@@ -2,6 +2,9 @@ import { type Locator, type Page } from "@playwright/test";
 import { BasePage } from "./base.page";
 import { PAGE_URLS } from "./page-urls";
 
+/**
+ * Page object for login form locators used by auth smoke tests.
+ */
 export class LoginPage extends BasePage {
   static readonly URL = PAGE_URLS.login;
 

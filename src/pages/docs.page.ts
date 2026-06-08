@@ -2,6 +2,9 @@ import { type Locator, type Page } from "@playwright/test";
 import { BasePage } from "./base.page";
 import { PAGE_URLS } from "./page-urls";
 
+/**
+ * Page object for static documentation checks.
+ */
 export class DocsPage extends BasePage {
   static readonly URL = PAGE_URLS.docs;
 

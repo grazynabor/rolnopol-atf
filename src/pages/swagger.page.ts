@@ -6,6 +6,9 @@ import {
 import { BasePage } from "./base.page";
 import { PAGE_URLS } from "./page-urls";
 
+/**
+ * Page object for Swagger content rendered inside an iframe.
+ */
 export class SwaggerPage extends BasePage {
   static readonly URL = PAGE_URLS.swagger;
 
@@ -22,6 +25,9 @@ export class SwaggerPage extends BasePage {
     );
   }
 
+  /**
+   * Keeps frame traversal inside the page object instead of the spec.
+   */
   documentationContent(): Locator {
     return this.swaggerFrame.locator("body");
   }

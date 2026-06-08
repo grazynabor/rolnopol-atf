@@ -2,12 +2,18 @@ import { type Locator, type Page, type Response } from "@playwright/test";
 import { BasePage } from "./base.page";
 import { PAGE_URLS } from "./page-urls";
 
+/**
+ * Test data accepted by the registration form.
+ */
 export type RegistrationUser = {
   email: string;
   displayName?: string;
   password: string;
 };
 
+/**
+ * Page object for registration flow actions and stable form locators.
+ */
 export class RegistrationPage extends BasePage {
   static readonly URL = PAGE_URLS.registration;
 
@@ -29,6 +35,9 @@ export class RegistrationPage extends BasePage {
     this.submitButton = page.getByTestId("register-submit-btn");
   }
 
+  /**
+   * Arms the API wait before submit so fast registration responses are captured.
+   */
   async register(user: RegistrationUser): Promise<Response> {
     await this.fillForm(user);
 

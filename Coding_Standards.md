@@ -16,21 +16,18 @@
 
 ## Test Structure: AAA
 
-Use Arrange, Act, Assert inside each test:
+Keep tests in Arrange, Act, Assert order. Add labels only when a longer test needs extra structure:
 
 - Arrange: create data, instantiate Page Objects, and navigate.
 - Act: perform the user action or flow under test.
 - Assert: verify the expected result in the test file.
 
 ```ts
-// Arrange
 const user = createRegistrationUser();
 const registrationPage = new RegistrationPage(page);
 
-// Act
 const response = await registrationPage.register(user);
 
-// Assert
 expect(response.status()).toBe(201);
 await expect(
   registrationPage.successNotification("Registration successful!"),
@@ -62,7 +59,8 @@ await expect(
 
 ### Avoid
 
+Assertions belong in spec files, not Page Objects:
+
 ```ts
-// Do not put this inside a Page Object.
 await expect(this.successNotification("Registration successful!")).toBeVisible();
 ```

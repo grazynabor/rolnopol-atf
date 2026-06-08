@@ -8,12 +8,14 @@ import {
   SwaggerPage,
 } from "../src/pages";
 
-
 const REGISTER_SUCCESS_NOTIFICATION = {
   title: "Success",
   message: "Registration successful!",
 };
 
+/**
+ * Shared smoke assertion for route loads before page-specific expectations.
+ */
 function expectPageLoaded(response: Response | null) {
   expect(response, "Page response should exist").not.toBeNull();
   expect(response!.ok()).toBeTruthy();
@@ -42,18 +44,11 @@ const DOCS_PAGE = {
   subtitle: "Rolnopol System Guide & API Reference",
 };
 
-function expectPageLoaded(response: Awaited<ReturnType<any>>) {
-  expect(response, "Page response should exist").not.toBeNull();
-  expect(response?.ok(), "Page response should be successful").toBe(true);
-}
-
 test("verifies that the page title contains 'Rolnopol' @smoke @regression @ui", async ({
   page,
 }) => {
-  // Arrange
   const homePage = new HomePage(page);
 
-  // Act
   const response = await homePage.goto();
 
   // Assert
@@ -118,10 +113,8 @@ test.describe("Auth smoke tests", () => {
   test("login page is visible and loaded @smoke @auth @ui @critical", async ({
     page,
   }) => {
-    // Arrange
     const loginPage = new LoginPage(page);
 
-    // Act
     const response = await loginPage.goto();
 
     // Assert
@@ -139,10 +132,8 @@ test.describe("Auth smoke tests", () => {
 test("swagger page loads and shows expected text @smoke @api @ui", async ({
   page,
 }) => {
-  // Arrange
   const swaggerPage = new SwaggerPage(page);
 
-  // Act
   const response = await swaggerPage.goto();
 
   // Assert
@@ -158,10 +149,8 @@ test("swagger page loads and shows expected text @smoke @api @ui", async ({
 test("docs page loads and shows expected text @smoke @api @ui", async ({
   page,
 }) => {
-  // Arrange
   const docsPage = new DocsPage(page);
 
-  // Act
   const response = await docsPage.goto();
 
   // Assert
