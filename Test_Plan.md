@@ -130,7 +130,7 @@ Validate critical smoke scenarios and key business functionalities of the Rolnop
 - [ ] Login with valid credentials
       `@smoke @regression @auth @ui @critical`
 
-- [ ] Login with invalid credentials
+- [x] Reject login with invalid credentials and show error message
       `@regression @auth @ui @negative`
 
 - [ ] Logout and session invalidation
@@ -155,7 +155,7 @@ Validate critical smoke scenarios and key business functionalities of the Rolnop
 - [ ] Login with valid credentials  
        `@smoke @regression @auth @ui @critical`
 
-- [ ] Login with invalid credentials  
+- [x] Reject login with invalid credentials and show error message
        `@regression @auth @ui @negative`
 
 - [ ] Logout and session invalidation  

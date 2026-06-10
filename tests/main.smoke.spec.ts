@@ -18,6 +18,11 @@ const REGISTER_DUPLICATE_NOTIFICATION = {
   message: "User with this email already exists",
 };
 
+const LOGIN_INVALID_CREDENTIALS_NOTIFICATION = {
+  title: "Error",
+  message: "Invalid credentials",
+};
+
 /**
  * Shared smoke assertion for route loads before page-specific expectations.
  */
@@ -72,20 +77,22 @@ test.beforeEach(async ({ page }) => {
   await page.route("https://cdnjs.cloudflare.com/**", (route) => route.abort());
 });
 
-test("verifies that the page title contains 'Rolnopol' @smoke @regression @ui", async ({
-  page,
-}) => {
-  const homePage = new HomePage(page);
+test.describe("Basic application smoke tests", () => {
+  test("verifies that the page title contains 'Rolnopol' @smoke @regression @ui", async ({
+    page,
+  }) => {
+    const homePage = new HomePage(page);
 
-  const response = await homePage.goto();
+    const response = await homePage.goto();
 
-  // Assert
-  expectPageLoaded(response);
+    // Assert
+    expectPageLoaded(response);
 
-  await expect(page).toHaveTitle(PAGE_TITLE);
+    await expect(page).toHaveTitle(PAGE_TITLE);
+  });
 });
 
-test.describe("Auth smoke tests", () => {
+test.describe("Registration tests", () => {
   test("register page is visible and loaded @smoke @auth @registration @ui @critical", async ({
     page,
   }) => {
@@ -241,7 +248,9 @@ test.describe("Auth smoke tests", () => {
       REGISTER_DUPLICATE_NOTIFICATION.message,
     );
   });
+});
 
+test.describe("Login tests", () => {
   test("login page is visible and loaded @smoke @auth @ui @critical", async ({
     page,
   }) => {
@@ -259,35 +268,69 @@ test.describe("Auth smoke tests", () => {
     await expect(loginPage.emailInput).toBeVisible();
     await expect(loginPage.passwordInput).toBeVisible();
   });
+
+  test("rejects invalid login credentials @regression @auth @ui @negative", async ({
+    page,
+  }) => {
+    // Arrange
+    const loginPage = new LoginPage(page);
+    const response = await loginPage.goto();
+
+    expectPageLoaded(response);
+
+    // Act
+    const loginResponse = await loginPage.login({
+      email: createUniqueEmail("invalid-login"),
+      password: "WrongPassword123!",
+    });
+    const errorNotification = loginPage.errorNotification(
+      LOGIN_INVALID_CREDENTIALS_NOTIFICATION.message,
+    );
+
+    // Assert
+    expect(loginResponse.status()).toBe(401);
+    await expect(page).toHaveURL(LOGIN_PAGE.url);
+    await expect(errorNotification).toBeVisible();
+    await expect(errorNotification).toContainText(
+      LOGIN_INVALID_CREDENTIALS_NOTIFICATION.title,
+    );
+    await expect(errorNotification).toContainText(
+      LOGIN_INVALID_CREDENTIALS_NOTIFICATION.message,
+    );
+  });
 });
 
-test("swagger page loads and shows expected text @smoke @api @ui", async ({
-  page,
-}) => {
-  const swaggerPage = new SwaggerPage(page);
+test.describe("Swagger documentation tests", () => {
+  test("swagger page loads and shows expected text @smoke @api @ui", async ({
+    page,
+  }) => {
+    const swaggerPage = new SwaggerPage(page);
 
-  const response = await swaggerPage.goto();
+    const response = await swaggerPage.goto();
 
-  // Assert
-  expectPageLoaded(response);
+    // Assert
+    expectPageLoaded(response);
 
-  await expect(page).toHaveURL(SWAGGER_PAGE.url);
-  await expect(swaggerPage.frame).toBeVisible();
-  await expect(swaggerPage.documentationContent()).toContainText(
-    SWAGGER_PAGE.expectedText,
-  );
+    await expect(page).toHaveURL(SWAGGER_PAGE.url);
+    await expect(swaggerPage.frame).toBeVisible();
+    await expect(swaggerPage.documentationContent()).toContainText(
+      SWAGGER_PAGE.expectedText,
+    );
+  });
 });
 
-test("docs page loads and shows expected text @smoke @api @ui", async ({
-  page,
-}) => {
-  const docsPage = new DocsPage(page);
+test.describe("System documentation tests", () => {
+  test("docs page loads and shows expected text @smoke @api @ui", async ({
+    page,
+  }) => {
+    const docsPage = new DocsPage(page);
 
-  const response = await docsPage.goto();
+    const response = await docsPage.goto();
 
-  // Assert
-  expectPageLoaded(response);
+    // Assert
+    expectPageLoaded(response);
 
-  await expect(page).toHaveURL(DOCS_PAGE.url);
-  await expect(docsPage.subtitle(DOCS_PAGE.subtitle)).toBeVisible();
+    await expect(page).toHaveURL(DOCS_PAGE.url);
+    await expect(docsPage.subtitle(DOCS_PAGE.subtitle)).toBeVisible();
+  });
 });
