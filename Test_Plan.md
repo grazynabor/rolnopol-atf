@@ -118,6 +118,15 @@ Validate critical smoke scenarios and key business functionalities of the Rolnop
 - [x] Register new user with required data: email and password
       `@smoke @regression @auth @registration @ui @critical`
 
+- [x] Prevent duplicate user registration with existing email
+      `@regression @auth @registration @ui @negative`
+
+- [x] Reject registration with invalid email format
+      `@regression @auth @registration @ui @negative`
+
+- [x] Reject registration with too short password
+      `@regression @auth @registration @ui @negative`
+
 - [ ] Login with valid credentials
       `@smoke @regression @auth @ui @critical`
 
@@ -133,6 +142,15 @@ Validate critical smoke scenarios and key business functionalities of the Rolnop
 
 - [x] Register new user with required data: email and password  
        `@smoke @regression @auth @registration @ui @critical`
+
+- [x] Prevent duplicate user registration with existing email  
+       `@regression @auth @registration @ui @negative`
+
+- [x] Reject registration with invalid email format  
+       `@regression @auth @registration @ui @negative`
+
+- [x] Reject registration with too short password  
+       `@regression @auth @registration @ui @negative`
 
 - [ ] Login with valid credentials  
        `@smoke @regression @auth @ui @critical`

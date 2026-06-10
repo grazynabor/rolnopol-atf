@@ -52,11 +52,23 @@ export class RegistrationPage extends BasePage {
     return registerResponsePromise;
   }
 
+  async submit(): Promise<void> {
+    await this.submitButton.click();
+  }
+
   successNotification(message: string): Locator {
+    return this.notification(message);
+  }
+
+  errorNotification(message: string): Locator {
+    return this.notification(message);
+  }
+
+  notification(message: string): Locator {
     return this.page.getByRole("alert").filter({ hasText: message });
   }
 
-  private async fillForm(user: RegistrationUser) {
+  async fillForm(user: RegistrationUser): Promise<void> {
     await this.emailInput.fill(user.email);
     if (user.displayName) {
       await this.displayNameInput.fill(user.displayName);

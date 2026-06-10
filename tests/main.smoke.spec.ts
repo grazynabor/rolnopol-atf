@@ -1,5 +1,5 @@
-import { expect, type Response, test } from "@playwright/test";
-import { createRegistrationUser } from "../src/helpers";
+import { expect, type Page, type Response, test } from "@playwright/test";
+import { createRegistrationUser, createUniqueEmail } from "../src/helpers";
 import {
   DocsPage,
   HomePage,
@@ -13,12 +13,36 @@ const REGISTER_SUCCESS_NOTIFICATION = {
   message: "Registration successful!",
 };
 
+const REGISTER_DUPLICATE_NOTIFICATION = {
+  title: "Error",
+  message: "User with this email already exists",
+};
+
 /**
  * Shared smoke assertion for route loads before page-specific expectations.
  */
 function expectPageLoaded(response: Response | null) {
   expect(response, "Page response should exist").not.toBeNull();
   expect(response!.ok()).toBeTruthy();
+}
+
+async function expectNoRegisterRequestDuring(
+  page: Page,
+  action: () => Promise<void>,
+) {
+  const registerRequestPromise = page
+    .waitForRequest(
+      (request) =>
+        request.url().includes("/api/v1/register") &&
+        request.method() === "POST",
+      { timeout: 1000 },
+    )
+    .then(() => true)
+    .catch(() => false);
+
+  await action();
+
+  expect(await registerRequestPromise).toBe(false);
 }
 
 const PAGE_TITLE = /Rolnopol/;
@@ -43,6 +67,10 @@ const DOCS_PAGE = {
   url: /docs\.html/,
   subtitle: "Rolnopol System Guide & API Reference",
 };
+
+test.beforeEach(async ({ page }) => {
+  await page.route("https://cdnjs.cloudflare.com/**", (route) => route.abort());
+});
 
 test("verifies that the page title contains 'Rolnopol' @smoke @regression @ui", async ({
   page,
@@ -82,6 +110,21 @@ test.describe("Auth smoke tests", () => {
     await expect(registrationPage.passwordInput).toBeVisible();
   });
 
+  test("register page shows login link @demo @auth @registration @ui", async ({
+    page,
+  }) => {
+    // Arrange
+    const registrationPage = new RegistrationPage(page);
+    const response = await registrationPage.goto();
+
+    expectPageLoaded(response);
+
+    // Assert
+    const loginLink = page.getByTestId("login-link");
+    await expect(loginLink).toBeVisible();
+    await expect(loginLink).toHaveAttribute("href", "/login.html");
+  });
+
   test("registers a new user with required data @smoke @regression @auth @registration @ui @critical", async ({
     page,
   }) => {
@@ -108,6 +151,95 @@ test.describe("Auth smoke tests", () => {
       REGISTER_SUCCESS_NOTIFICATION.message,
     );
     await expect(page).toHaveURL(LOGIN_PAGE.url);
+  });
+
+  test("rejects invalid email format @regression @auth @registration @ui @negative", async ({
+    page,
+  }) => {
+    // Arrange
+    const registrationPage = new RegistrationPage(page);
+    const response = await registrationPage.goto();
+
+    expectPageLoaded(response);
+
+    await registrationPage.fillForm({
+      email: "incorrect-email",
+      password: "Test#123Aa1",
+    });
+
+    // Act
+    await expectNoRegisterRequestDuring(page, () => registrationPage.submit());
+
+    // Assert
+    expect(
+      await registrationPage.emailInput.evaluate(
+        (input: HTMLInputElement) => input.validity.typeMismatch,
+      ),
+    ).toBe(true);
+    await expect(page).toHaveURL(REGISTER_PAGE.url);
+  });
+
+  test("rejects too short password @regression @auth @registration @ui @negative", async ({
+    page,
+  }) => {
+    // Arrange
+    const registrationPage = new RegistrationPage(page);
+    const response = await registrationPage.goto();
+
+    expectPageLoaded(response);
+
+    await registrationPage.fillForm({
+      email: createUniqueEmail("short-password-registration"),
+      password: "ab",
+    });
+
+    // Act
+    await expectNoRegisterRequestDuring(page, () => registrationPage.submit());
+
+    // Assert
+    expect(
+      await registrationPage.passwordInput.evaluate(
+        (input: HTMLInputElement) => input.validity.tooShort,
+      ),
+    ).toBe(true);
+    await expect(page).toHaveURL(REGISTER_PAGE.url);
+  });
+
+  test("blocks duplicate user registration @regression @auth @registration @ui @negative", async ({
+    page,
+    request,
+  }) => {
+    // Arrange
+    const registrationPage = new RegistrationPage(page);
+    const timestamp = Date.now().toString();
+    const user = {
+      email: createUniqueEmail("duplicate-registration", timestamp),
+      password: `Test#${timestamp.slice(-6)}Aa1`,
+    };
+    const seedResponse = await request.post("/api/v1/register", {
+      data: user,
+    });
+    const response = await registrationPage.goto();
+
+    expect(seedResponse.status()).toBe(201);
+    expectPageLoaded(response);
+
+    // Act
+    const registerResponse = await registrationPage.register(user);
+    const errorNotification = registrationPage.errorNotification(
+      REGISTER_DUPLICATE_NOTIFICATION.message,
+    );
+
+    // Assert
+    expect(registerResponse.status()).toBe(409);
+    await expect(page).toHaveURL(REGISTER_PAGE.url);
+    await expect(errorNotification).toBeVisible();
+    await expect(errorNotification).toContainText(
+      REGISTER_DUPLICATE_NOTIFICATION.title,
+    );
+    await expect(errorNotification).toContainText(
+      REGISTER_DUPLICATE_NOTIFICATION.message,
+    );
   });
 
   test("login page is visible and loaded @smoke @auth @ui @critical", async ({
