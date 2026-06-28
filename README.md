@@ -4,15 +4,10 @@ Automated end-to-end tests for the Rolnopol application built with Playwright.
 
 ## Overview
 
-This repository contains UI and smoke test coverage for key Rolnopol pages and flows. The current suite focuses on:
+This repository contains end-to-end and smoke tests for the Rolnopol application.
+The suite is organized around reusable page objects and supporting helpers to keep test code readable and easier to maintain.
 
-- home page availability
-- registration page and registration flow
-- login page and invalid login handling
-- Swagger/API documentation page
-- system documentation page
-
-The project uses the Page Object Model to keep tests readable and easier to maintain.
+For the current test scope, scenarios, and tagging strategy, see [Test_Plan.md](./Test_Plan.md).
 
 ## Tech Stack
 
@@ -25,7 +20,7 @@ The project uses the Page Object Model to keep tests readable and easier to main
 
 Before running the project locally, make sure you have:
 
-- Node.js 18 or newer
+- a recent LTS version of Node.js
 - npm
 
 ## Installation
@@ -42,50 +37,9 @@ Install Playwright browsers:
 npm run install:browsers
 ```
 
-## Running the Project
+## Common Commands
 
-Start the local static server manually:
-
-```bash
-npm run dev
-```
-
-The Playwright configuration also starts the local server automatically when running tests, so in most cases you can go straight to the test commands below.
-
-## Running Tests
-
-Run the full test suite:
-
-```bash
-npm test
-```
-
-Run tests in headed mode:
-
-```bash
-npm run test:headed
-```
-
-Open the Playwright UI runner:
-
-```bash
-npm run test:ui
-```
-
-Run tests in debug mode:
-
-```bash
-npm run test:debug
-```
-
-Open the HTML report after execution:
-
-```bash
-npm run report
-```
-
-## Available Scripts
-
+- `npm run dev` - serves the project locally on `http://localhost:3000`
 - `npm test` - runs all Playwright tests
 - `npm run test:headed` - runs tests with a visible browser
 - `npm run test:ui` - opens the Playwright UI runner
@@ -93,7 +47,8 @@ npm run report
 - `npm run report` - opens the generated Playwright HTML report
 - `npm run codegen` - starts Playwright code generation
 - `npm run install:browsers` - installs required Playwright browsers
-- `npm run dev` - serves the project locally on `http://localhost:3000`
+
+The Playwright configuration starts the local server automatically when running tests, so `npm run dev` is mainly useful for manual checks.
 
 ## Project Structure
 
