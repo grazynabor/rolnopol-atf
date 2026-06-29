@@ -3,7 +3,7 @@ name: playwright-ci
 on:
   push:
     branches:
-      - copilot/prepare-github-aactions-script
+      - feature/github-actions
 
 jobs:
   test:
