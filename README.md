@@ -2,70 +2,77 @@
 
 Automated end-to-end tests for the Rolnopol application built with Playwright.
 
-## Overview
+## Quick Start
 
-This repository contains end-to-end and smoke tests for the Rolnopol application.
-The suite is organized around reusable page objects and supporting helpers to keep test code readable and easier to maintain.
-
-For the current test scope, scenarios, and tagging strategy, see [Test_Plan.md](./Test_Plan.md).
-
-## Tech Stack
-
-- Node.js
-- npm
-- Playwright
-- TypeScript
-
-## Prerequisites
-
-Before running the project locally, make sure you have:
-
-- a recent LTS version of Node.js
-- npm
-
-## Installation
-
-Install dependencies:
+**Requirements:** Node.js 18 LTS or later, npm (bundled with Node.js), Chromium (installed in step 2).
 
 ```bash
+# 1. Install dependencies
 npm install
+
+# 2. Install Playwright browsers
+npm run install:browsers
+
+# 3. Run all tests
+npm test
 ```
 
-Install Playwright browsers:
+HTML results are saved to `playwright-report/`. Open them with `npm run report`.
+
+## Test Examples
 
 ```bash
-npm run install:browsers
+# Run all tests (headless, Chromium)
+npm test
+
+# Run with a visible browser
+npm run test:headed
+
+# Run only smoke tests
+npx playwright test --grep @smoke
+
+# Run a specific test file
+npx playwright test tests/home.spec.ts
+
+# Open the interactive UI runner
+npm run test:ui
+
+# Debug a failing test step by step
+npm run test:debug
 ```
 
-## Common Commands
+## All Commands
 
-- `npm run dev` - serves the project locally on `http://localhost:3000`
-- `npm test` - runs all Playwright tests
-- `npm run test:headed` - runs tests with a visible browser
-- `npm run test:ui` - opens the Playwright UI runner
-- `npm run test:debug` - runs tests in debug mode
-- `npm run report` - opens the generated Playwright HTML report
-- `npm run codegen` - starts Playwright code generation
-- `npm run install:browsers` - installs required Playwright browsers
+| Command | Description |
+|---|---|
+| `npm test` | Run all tests (headless) |
+| `npm run test:headed` | Run tests with a visible browser |
+| `npm run test:ui` | Open the Playwright UI runner |
+| `npm run test:debug` | Run tests in debug mode |
+| `npm run report` | Open the generated HTML report |
+| `npm run codegen` | Start Playwright code generation |
+| `npm run install:browsers` | Install required Playwright browsers |
+| `npm run dev` | Serve the app locally on `http://localhost:3000` |
 
-The Playwright configuration starts the local server automatically when running tests, so `npm run dev` is mainly useful for manual checks.
+> The Playwright configuration starts the local dev server automatically during test runs, so `npm run dev` is mainly useful for manual checks.
 
 ## Project Structure
 
-- `tests/` - end-to-end and smoke test specifications
-- `src/pages/` - page object models and page URL helpers
-- `src/helpers/` - helper utilities and test data builders
-- `playwright.config.ts` - Playwright configuration
-- `Test_Plan.md` - planned scope and tagging strategy for tests
-- `Coding_Standards.md` - project coding rules and conventions
+```
+tests/              # test specifications
+src/pages/          # page object models
+src/helpers/        # utilities and test data builders
+playwright.config.ts
+```
 
-## Notes
+## Tech Stack
 
-- The test suite currently runs in Chromium.
-- HTML reports are generated in `playwright-report/`.
-- Additional test artifacts may appear in `test-results/`.
+- Node.js 18 LTS+
+- npm
+- Playwright (TypeScript)
+- Chromium
 
 ## Related Documentation
 
-- [Test_Plan.md](./Test_Plan.md)
-- [Coding_Standards.md](./Coding_Standards.md)
+- [Test_Plan.md](./Test_Plan.md) – test scope, scenarios, and tag reference
+- [Coding_Standards.md](./Coding_Standards.md) – coding rules and conventions
