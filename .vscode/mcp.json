@@ -9,6 +9,10 @@
       ],
       "gallery": "https://api.mcp.github.com",
       "version": "0.0.1-seed"
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
     }
   },
   "inputs": []
