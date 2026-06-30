@@ -8,7 +8,7 @@
     "test:headed": "npx playwright test --headed",
     "test:ui": "npx playwright test --ui",
     "test:debug": "npx playwright test --debug",
-    "report": "npx playwright show-report",
+    "report": "npx playwright show-report playwright-report",
     "codegen": "npx playwright codegen",
     "install:browsers": "npx playwright install",
     "dev": "npx serve . -p 3000"
