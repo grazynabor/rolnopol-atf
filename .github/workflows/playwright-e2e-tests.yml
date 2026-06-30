@@ -1,4 +1,4 @@
-name: Playwright E2E Tests
+name: playwright-ci
 
 on:
   pull_request:
@@ -8,26 +8,57 @@ on:
       - synchronize
 
 jobs:
-  e2e-tests:
+  test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
-
+    container:
+      image: mcr.microsoft.com/playwright:v1.59.1-noble
+    services:
+      app:
+        image: jaktestowac/rolnopol:latest
+    env:
+      PLAYWRIGHT_BASE_URL: http://app:3000
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: "20"
+          node-version: 20
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+      - name: Wait for app
+        run: |
+          for i in {1..30}; do
+            if curl -fsS "$PLAYWRIGHT_BASE_URL" > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "App did not become ready in time" >&2
+          exit 1
 
-      - name: Run Playwright tests
-        run: npx playwright test
+      - name: Run tests
+        run: npm test
+
+      - name: Upload Playwright Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-ci
+          path: playwright-report-ci/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Add Playwright report link to summary
+        if: always()
+        run: |
+          RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          echo "## Playwright report" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Artifact: \`playwright-report-ci\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "[Open this workflow run and download the report artifact](${RUN_URL})" >> "$GITHUB_STEP_SUMMARY"
