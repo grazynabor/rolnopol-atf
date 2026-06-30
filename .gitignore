@@ -7,3 +7,4 @@ node_modules/
 /playwright/.auth/
 /playwright-report-ci/
 github.vscode-github-actions
+/.playwright-mcp/
