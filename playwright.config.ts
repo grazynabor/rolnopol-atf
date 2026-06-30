@@ -3,6 +3,7 @@ import { defineConfig, devices } from "@playwright/test";
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";
 const resultsRoot = "test-result";
 const isCI = !!process.env.CI;
+const reportFolder = isCI ? "playwright-report-ci" : "playwright-report";
 
 export default defineConfig({
   testDir: "./tests",
@@ -10,7 +11,7 @@ export default defineConfig({
   fullyParallel: true,
   outputDir: `${resultsRoot}/test-results`,
   preserveOutput: "always",
-  reporter: [["html", { open: "never", outputFolder: "playwright-report", doNotInlineAssets: true }]],
+  reporter: [["html", { open: "never", outputFolder: reportFolder, doNotInlineAssets: true }]],
   webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
     : {
