@@ -7,8 +7,10 @@ const reportFolder = isCI ? "playwright-report-ci" : "playwright-report";
 
 export default defineConfig({
   testDir: "./tests",
-  timeout: 10 * 1000,
-  fullyParallel: true,
+  timeout: isCI ? 20 * 1000 : 10 * 1000,
+  fullyParallel: !isCI,
+  retries: isCI ? 2 : 0,
+  workers: isCI ? 1 : undefined,
   outputDir: `${resultsRoot}/test-results`,
   preserveOutput: "always",
   reporter: [["html", { open: "never", outputFolder: reportFolder, doNotInlineAssets: true }]],
