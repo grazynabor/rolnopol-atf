@@ -1,5 +1,6 @@
 name: playwright-ci
 
+# Trigger this workflow on pushes to the feature branch and when manually requested.
 on:
   push:
     branches:
@@ -8,24 +9,32 @@ on:
 
 jobs:
   test:
+    # Run the job on a fresh Ubuntu virtual machine.
     runs-on: ubuntu-latest
+    # Stop the job if it takes longer than 10 minutes.
     timeout-minutes: 10
+    # Use a Playwright-enabled container image with browser tooling preinstalled.
     container:
       image: mcr.microsoft.com/playwright:v1.59.1-noble
+    # Start the application service container that the tests will target.
     services:
       app:
         image: jaktestowac/rolnopol:latest
     env:
+      # Base URL for Playwright tests, pointing at the app service.
       PLAYWRIGHT_BASE_URL: http://app:3000
     steps:
       - uses: actions/checkout@v5
+        # Checkout the repository code so tests can run against it.
       - uses: actions/setup-node@v5
         with:
           node-version: 20
           cache: npm
+        # Install Node.js and enable npm dependency caching.
 
       - name: Install dependencies
         run: npm ci
+        # Install the npm dependencies from package-lock.json.
 
       - name: Wait for app
         run: |
@@ -37,9 +46,11 @@ jobs:
           done
           echo "App did not become ready in time" >&2
           exit 1
+        # Poll the application until it responds, giving it up to 60 seconds.
 
       - name: Run tests
         run: npm test
+        # Execute the test suite, which should generate the Playwright report.
 
       - name: Upload Playwright Report
         if: always()
@@ -49,6 +60,7 @@ jobs:
           path: playwright-report/
           if-no-files-found: warn
           retention-days: 30
+        # Always upload the generated report artifact, even if the tests fail.
 
       - name: Add Playwright report link to summary
         if: always()
@@ -59,3 +71,4 @@ jobs:
           echo "Artifact: \`playwright-report\`" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "[Open this workflow run and download the report artifact](${RUN_URL})" >> "$GITHUB_STEP_SUMMARY"
+        # Add a link to the workflow summary so reviewers can find the report artifact.
