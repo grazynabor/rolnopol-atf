@@ -2,7 +2,7 @@ name: playwright-ci
 # trigger workflow run
 
 on:
-  pull_request:
+  push:
     branches:
       - feature/github-actions
   workflow_dispatch:
