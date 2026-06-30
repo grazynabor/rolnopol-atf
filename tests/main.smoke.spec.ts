@@ -54,7 +54,7 @@ const PAGE_TITLE = /Rolnopol/;
 
 const REGISTER_PAGE = {
   url: /register\.html/,
-  subtitle: "Create Your User Account x",
+  subtitle: "Create Your User Account",
 };
 
 const LOGIN_PAGE = {
