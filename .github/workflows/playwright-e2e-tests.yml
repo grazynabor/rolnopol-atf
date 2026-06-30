@@ -1,8 +1,7 @@
 name: playwright-ci
-# trigger workflow run
 
 on:
-  push:
+  pull_request:
     branches:
       - feature/github-actions
   workflow_dispatch:
@@ -41,3 +40,24 @@ jobs:
 
       - name: Run tests
         run: npm test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Add Playwright report link to summary
+        if: always()
+        run: |
+          RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          echo "## Playwright report" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Artifact: \`playwright-report\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "[Open this workflow run and download the report artifact](${RUN_URL})" >> "$GITHUB_STEP_SUMMARY"
