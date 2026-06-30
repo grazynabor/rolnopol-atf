@@ -21,7 +21,7 @@ export default defineConfig({
       },
   use: {
     baseURL,
-    trace: isCI ? "on-first-retry" : "on",
+    trace: "on",
   },
   projects: [
     {
