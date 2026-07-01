@@ -69,20 +69,20 @@ jobs:
         run: npm test
 
       - name: Upload Playwright Report
-        if: always()
+        if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-ci
+          name: playwright-report-${{ github.run_id }}-${{ github.run_attempt }}
           path: playwright-report-ci/
           if-no-files-found: warn
           retention-days: 14
 
       - name: Add Playwright report link to summary
-        if: always()
+        if: success() || failure()
         run: |
           RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           echo "## Playwright report" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "Artifact: \`playwright-report-ci\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Artifact: \`playwright-report-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "[Open this workflow run and download the report artifact](${RUN_URL})" >> "$GITHUB_STEP_SUMMARY"
