@@ -12,6 +12,7 @@ on:
       - reopened
       - ready_for_review
       - synchronize
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
