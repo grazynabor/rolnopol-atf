@@ -11,7 +11,8 @@
     "report": "npx playwright show-report playwright-report",
     "codegen": "npx playwright codegen",
     "install:browsers": "npx playwright install",
-    "dev": "npx serve . -p 3000"
+    "dev": "npx serve . -p 3000",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
   "homepage": "https://github.com/Grazyna86/rolnopol-atf#readme",
   "devDependencies": {
     "@playwright/test": "^1.59.1",
-    "@types/node": "^25.6.0"
+    "@types/node": "^25.6.0",
+    "typescript": "^6.0.3"
   }
 }
