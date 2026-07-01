@@ -33,15 +33,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Wait for app
+      - name: Wait for rolnopol service
         run: |
           for i in $(seq 1 30); do
-            if curl -fsS "$PLAYWRIGHT_BASE_URL" > /dev/null; then
+            if curl -sSf "$PLAYWRIGHT_BASE_URL" > /dev/null; then
+              echo "Service is ready"
               exit 0
             fi
+            echo "Waiting for service... ($i)"
             sleep 2
           done
-          echo "App did not become ready in time" >&2
+          echo "Service did not become ready in time" >&2
           exit 1
 
       - name: Run tests
