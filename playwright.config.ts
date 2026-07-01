@@ -13,7 +13,12 @@ export default defineConfig({
   workers: isCI ? 1 : undefined,
   outputDir: `${resultsRoot}/test-results`,
   preserveOutput: "always",
-  reporter: [["html", { open: "never", outputFolder: reportFolder, doNotInlineAssets: true }]],
+  reporter: isCI
+    ? [
+        ["github"],
+        ["html", { open: "never", outputFolder: reportFolder, doNotInlineAssets: true }],
+      ]
+    : [["html", { open: "never", outputFolder: reportFolder, doNotInlineAssets: true }]],
   webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
     : {
