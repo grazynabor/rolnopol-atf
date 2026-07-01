@@ -3,7 +3,6 @@ import { defineConfig, devices } from "@playwright/test";
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000";
 const resultsRoot = "test-result";
 const isCI = !!process.env.CI;
-const reportFolder = isCI ? "playwright-report-ci" : "playwright-report";
 
 export default defineConfig({
   testDir: "./tests",
@@ -14,11 +13,8 @@ export default defineConfig({
   outputDir: `${resultsRoot}/test-results`,
   preserveOutput: "always",
   reporter: isCI
-    ? [
-        ["github"],
-        ["html", { open: "never", outputFolder: reportFolder, doNotInlineAssets: true }],
-      ]
-    : [["html", { open: "never", outputFolder: reportFolder, doNotInlineAssets: true }]],
+    ? [["github"], ["html", { open: "never" }]]
+    : [["html", { open: "never" }]],
   webServer: process.env.PLAYWRIGHT_BASE_URL
     ? undefined
     : {
